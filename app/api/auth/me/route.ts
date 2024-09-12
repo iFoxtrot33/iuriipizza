@@ -1,18 +1,24 @@
-import { getUserSession } from '@/lib/get-user-session';
-import { prisma } from '@/lib/prisma';
-import { NextResponse } from 'next/server';
+import { authOptions } from "@/constants/authOptions";
+import { prisma } from "@/lib/prisma";
+import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth/next";
 
-export async function GET() {
+export const dynamic = "force-dynamic";
+
+export async function GET(req: any, res: any) {
   try {
-    const user = await getUserSession();
+    const user = await getServerSession(req, res, authOptions);
 
     if (!user) {
-      return NextResponse.json({ message: '[USER_GET] Unauthorized' }, { status: 401 });
+      return NextResponse.json(
+        { message: "Вы не авторизованы" },
+        { status: 401 }
+      );
     }
 
     const data = await prisma.user.findUnique({
       where: {
-        id: Number(user.id),
+        id: Number(user.user.id),
       },
       select: {
         fullName: true,
@@ -24,6 +30,9 @@ export async function GET() {
     return NextResponse.json(data);
   } catch (error) {
     console.log(error);
-    return NextResponse.json({ message: '[USER_GET] Server error' }, { status: 500 });
+    return NextResponse.json(
+      { message: "[USER_GET] Server error" },
+      { status: 500 }
+    );
   }
 }
