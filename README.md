@@ -6,7 +6,7 @@ This is a Dodo Pizza Clone website.
 
 ## 🌐 Demo:
 
-https://iuriipizza.vercel.app/
+https://iuriinextpizza.vercel.app/
 
 ## 💻 To Start Locally
 
